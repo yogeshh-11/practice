@@ -111,6 +111,7 @@ wsl –-install  command in – powershell administrator
 restart pc
 Install again -> desktop icon 
 Sign in using your mail 
+run in powershell
 Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All
 run in powershell
 Restart 
