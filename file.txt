@@ -1,0 +1,921 @@
+Devops
+EXP2 : Git github version control
+
+Download and install Git from browser
+git --version   ->     git version 2.x.x.windows.x
+git config --global user.name "Your Name"
+git config --global user.email "Your Email"
+Verify -> git config --global –list
+
+user.name=Name
+user.email=your-github-email@gmail.com
+
+Create a folder and add files into it
+In searchbar -> cmd
+git init -> Initialized empty Git repository
+git status -> On branch main No commits yet nothing to commit
+git add . -> add all files
+git commit -m "Added five C programs and README"
+
+Create a GitHub repository
+Copy the repository URL and follow the given commands from repo
+and push the code
+
+git remote add origin URL
+git branch -M main
+
+
+
+
+
+
+EXP3 & 4 both : Collaborating on Projects using GitHub and Pull Requests
+
+Download git , github account . perform exp 2 as it is 
+
+
+Add Student B as a GitHub Collaborator
+Github -> settings -> collaborators ->add people ->email/username -> select account -> invite -> Invitation sent successfully
+
+Accept the collaboration invitation
+Now switch to Student B's GitHub account.
+1.	Open GitHub.
+2.	Sign in using Student B's account.
+3.	Open the notification bell.
+4.	Find the repository collaboration invitation.
+5.	Click View invitation.
+6.	Click Accept invitation.
+You now have access to the repository.
+
+Collaborator – Clone the repository
+Create a folder 
+Open git bash 
+cd folder 
+git clone “repo url”
+git clone https://github.com/StudentA/GitHub-Collaboration.git
+-> Cloning into 'GitHub-Collaboration'...
+remote: Enumerating objects...
+Receiving objects: 100%
+Resolving deltas: 100%
+git status -> 
+
+ On branch main
+Your branch is up to date with 'origin/main'.
+nothing to commit, working tree clean
+
+
+Collaborator – Create a new branch
+
+git checkout -b branchname _> create and switch to new branch
+git branch -> * branchname       main
+
+Collaborator – make changes – add files – modify files
+git status
+git diff
+
+Collaborator – Add, Commit and Push changes
+git add . -> add files
+git status -> Changes to be committed:
+    modified: index.html
+git commit -m "Added about section and project features"
+git push -u origin branchname
+
+
+Create a Pull Request on GitHub(collaborator work)
+Open the GitHub repository
+From student b account open A student repo
+feature/add-about-section had recent pushes
+Compare & pull request
+1.	Click the Pull requests tab.
+2.	Click New pull request.
+3.	 Click Create pull request.
+4.	Verify Pull Request creation
+Repository Owner – Review and Merge Pull Request
+Open Pull Requests
+1.	Log in to Student A's GitHub account.
+2.	Open the GitHub-Collaboration repository.
+3.	Click the Pull requests tab.
+4.	Open the Pull Request created by Student B.
+Review -> approve -> merge 
+
+After that push to main 
+git checkout -b main
+Git push origin main
+
+
+EXP 5 : Automating Builds and Jobs using Jenkins with Docker Desktop
+Download Docker Desktop – chrome 
+docker for windows x64
+install 
+wsl –-install  command in – powershell administrator
+restart pc
+Install again -> desktop icon 
+Sign in using your mail 
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -All
+run in powershell
+Restart 
+start docker 
+check ….docker –version -> Docker version 28.x.x, build xxxxxxx
+docker compose version -> Docker Compose version v2.x.x
+docker info -> Server:
+ Containers: 0
+
+ Images: 0
+Powershell same 
+
+docker pull jenkins/jenkins:lts-jdk21
+install the required things 
+
+docker images -> show info about images
+
+docker volume create jenkins_home -> jenkins_home
+
+docker run -d --name jenkins-lab -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home --restart unless-stopped jenkins/jenkins:lts-jdk21
+
+-> xxxxxxxxxxxxx
+
+docker ps ->  If you can see jenkins-lab with status Up, Jenkins is running.
+docker logs jenkins-lab -> Jenkins is fully up and running
+
+Step 13. Access Jenkins
+1.	Open Google Chrome.
+2.	Enter this address:
+http://localhost:8080
+docker exec jenkins-lab cat /var/jenkins_home/secrets/initialAdminPassword
+-> password to enter in Jenkins
+
+Install suggested plugins. -> wait they will download automatically
+
+Getting Started
+Installing Plugins
+
+Step 16. Create Jenkins administrator account
+Enter the following details:
+Field	Example
+Username	admin
+Password	Your own password
+Confirm password	Same password
+Full name	Your Name
+Email	Your email address
+Click Save and Continue.
+
+save and finish -> start using Jenkins  
+
+
+powershell – 
+
+docker exec jenkins-lab java -version
+docker exec jenkins-lab javac -version
+docker exec jenkins-lab git –version
+
+docker exec -u 0 jenkins-lab apt-get update - > install git in container
+docker exec -u 0 jenkins-lab apt-get install -y git
+
+
+
+
+Configure Git in Jenkins
+Open Jenkins  ->settings -> tools -> Git installations -> 
+•	Name: Default
+•	Path to Git executable: /usr/bin/git
+Save 
+
+Create a Java project on GitHub
+Step 22. Create a GitHub repository
+1.	Open Chrome.
+2.	Visit github
+3.	Log in to your GitHub account.
+4.	Click the + icon in the top-right corner.
+5.	Select New repository.
+6.	Create repository.
+
+
+	
+Repository name		Jenkins-Demo
+create HelloWorld.java
+1.	Open the newly created Jenkins-Demo repository.
+2.	Click Add file.
+3.	Select Create new file.
+4.	Enter the filename:
+HelloWorld.java
+
+public class HelloWorld {
+
+    public static void main(String[] args) {
+
+        System.out.println("Hello World!");
+
+        System.out.println("Welcome to Jenkins Automation");
+
+        System.out.println("Java program built successfully using Docker Jenkins");
+
+    }
+}
+
+commit the changes 
+
+copy the repo url 
+
+
+Create a Freestyle Project in Jenkins
+
+Step 26. Open Jenkins Dashboard
+1. Open:
+http://localhost:8080
+new item -> name -> freestyle -> ok->  description 
+code management -> git -> URL -> main branch -> poll scm -> H/5 * * * * 
+
+Step 31. Configure Build Steps
+Scroll down to Build Steps.
+1.	Click Add build step.
+2.	Select Execute shell.
+In command box 
+
+echo "Starting Java Build..."
+
+javac HelloWorld.java
+
+echo "Java Compilation Completed"
+
+java HelloWorld
+
+echo "Build Execution Completed"
+
+Save 
+
+
+Part 8: Execute the Jenkins job manually
+Step 33. Run the job
+1.	Open the HelloWorld-Build project.
+2.	Click Build Now on the left sidebar.
+3.	Wait for Jenkins to execute the job.
+you will see #1 in build history 
+open 
+
+change the repo file code 
+System.out.println("Tcommithis is the second automatic build!");
+ Commit 
+
+#1  SUCCESS
+#2  SUCCESS
+
+
+EXP 6 : Applying CI/CD Principles to Web Development using Jenkins
+
+docker start jenkins-lab
+docker ps
+http://localhost:8080
+Prepare Docker for web deployment
+
+Open PowerShell.
+Execute:
+docker volume create web-deploy
+docker pull httpd:2.4
+docker run -d --name web-server -p 8000:80 -v web-deploy:/usr/local/apache2/htdocs:ro httpd:2.4
+docker ps
+
+docker stop jenkins-lab
+docker rm jenkins-lab
+
+Create a custom Jenkins Docker image
+We need two additional tools inside Jenkins:
+•	Git – to download the GitHub project.
+•	Tidy – to validate HTML code.
+Open PowerShell and execute:
+mkdir C:\Jenkins-CI
+cd C:\Jenkins-CI
+notepad Dockerfile
+
+paste : 
+
+FROM jenkins/jenkins:lts-jdk21
+
+USER root
+
+RUN apt-get update && apt-get install -y git tidy \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /var/deploy \
+    && chown -R jenkins:jenkins /var/deploy
+
+USER Jenkins
+
+Save and close Notepad.
+
+docker build -t jenkins-ci:latest .
+
+docker run -d --name jenkins-lab -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v web-deploy:/var/deploy --restart unless-stopped jenkins-ci:latest
+
+docker ps
+docker exec jenkins-lab git –version
+docker exec jenkins-lab tidy –version
+docker exec jenkins-lab ls -ld /var/deploy
+Open Jenkins again
+Visit:
+http://localhost:8080
+
+docker logs jenkins-lab
+Create a new HTML/CSS/JavaScript project
+
+web-app/
+│
+├── index.html
+├── style.css
+└── script.js
+
+Step 17. Create a GitHub repository
+1.	Open GitHub.
+2.	Sign in.
+3.	Click the + icon.
+4.	Select New repository.
+5.	Enter:
+Option	Value
+Repository name	Jenkins-Web-CICD
+Description	CI/CD Web Application using Jenkins
+Visibility	Public
+Add README	Yes
+6. Click Create repository.
+Step 18. Create index.html
+1.	Open your repository.
+2.	Click Add file → Create new file.
+3.	Enter:
+index.html
+4. Paste:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenkins CI/CD Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Welcome to Jenkins CI/CD</h1>
+
+    <p>This website is deployed automatically using Jenkins.</p>
+
+    <button onclick="showMessage()">Click Me</button>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+5.	Scroll down.
+6.	Commit message:
+Added HTML web page
+7. Click Commit changes.
+Step 19. Create style.css
+1.	Click Add file → Create new file.
+2.	Enter:
+style.css
+3. Paste:
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: lightblue;
+    padding: 50px;
+}
+
+h1 {
+    color: darkblue;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: navy;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+4. Commit message:
+Added CSS styling
+5. Click Commit changes.
+Step 20. Create script.js
+1.	Click Add file → Create new file.
+2.	Enter:
+script.js
+3. Paste:
+function showMessage() {
+    alert("Jenkins CI/CD is working successfully!");
+}
+4. Commit message:
+Added JavaScript functionality
+5. Click Commit changes.
+Step 21. Verify GitHub repository
+Your repository should look like:
+Jenkins-Web-CICD
+│
+├── README.md
+├── index.html
+├── style.css
+└── script.js
+Step 22. Copy repository URL
+Copy the repo URL.
+
+Part 5: Create Jenkinsfile for CI/CD pipeline
+This is the most important change in Experiment 6.
+In Experiment 5, we used separate build commands for Java. Now we will create a Jenkinsfile containing four stages:
+1.	Checkout
+2.	Build
+3.	Test
+4.	Deploy
+Step 23. Create Jenkinsfile on GitHub
+1.	Open the Jenkins-Web-CICD repository.
+2.	Click Add file → Create new file.
+3.	Enter the filename:
+Jenkinsfile
+4. Paste the following code:
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Downloading project from GitHub'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building Web Application'
+                sh 'ls -l'
+                echo 'Build completed successfully'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Validating HTML code'
+                sh 'tidy -q -e index.html'
+                echo 'HTML validation completed'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying website to Apache server'
+
+                sh 'cp index.html style.css script.js /var/deploy/'
+
+                echo 'Website deployed successfully'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI/CD Pipeline completed successfully!'
+            echo 'Visit http://localhost:8000'
+        }
+
+        failure {
+            echo 'Pipeline failed! Check console output.'
+        }
+    }
+}
+5.	Scroll down.
+6.	Commit message:
+Added Jenkins CI CD Pipeline
+7. Click Commit changes.
+Step 24. Verify GitHub repository
+Expected structure:
+Jenkins-Web-CICD
+│
+├── README.md
+├── index.html
+├── style.css
+├── script.js
+└── Jenkinsfile
+Part 6: Create a Pipeline job in Jenkins
+Step 25. Open Jenkins Dashboard
+Visit:
+http://localhost:8080
+Step 26. Create a new Pipeline project
+1.	Click New Item.
+2.	Enter:
+WebApp-CICD
+3.	Select Pipeline.
+4.	Click OK.
+Step 27. Configure Pipeline
+Scroll down to the Pipeline section.
+Under Definition, select:
+Pipeline script from SCM
+Under SCM, select:
+Git
+Enter your GitHub repository URL:
+https://github.com/YourUsername/Jenkins-Web-CICD.git
+Under Branch Specifier, enter:
+*/main
+Under Script Path, enter:
+Jenkinsfile
+Step 28. Configure automatic build trigger
+Scroll to Build Triggers.
+Select:
+Poll SCM
+Enter:
+H/5 * * * *
+This checks GitHub approximately every five minutes.
+Step 29. Save the Pipeline job
+Click Save.
+Your WebApp-CICD Pipeline job is now configured.
+Part 7: Execute the CI/CD pipeline
+Step 30. Run the pipeline manually
+1.	Open the WebApp-CICD project.
+2.	Click Build Now.
+3.	Wait for the execution to finish.
+Step 31. Check Pipeline stages
+You should see these four stages:
+WebApp-CICD Pipeline
+Checkout
+Success
+Build
+Success
+Test
+Success
+Deploy
+Success
+Step 32. Check Console Output
+
+
+Verify the deployed website
+Step 33. Open the deployed website
+Open Chrome and visit:
+http://localhost:8000
+
+
+EXP 7 : Introduction to Containerization and Application Deployment using Docker
+Download and open docker desktop
+start the engine
+Open powershell
+    docker –version
+docker info 
+mkdir flask-docker-app
+cd flask-docker-app
+pwd
+notepad app.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, Docker! Flask Application is Running Successfully!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+notepad requirements.txt
+dir
+notepad Dockerfile
+paste : 
+
+# Use official Python image
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements file
+COPY requirements.txt requirements.txt
+
+# Install Flask
+RUN pip install -r requirements.txt
+
+# Copy application files
+COPY . .
+
+# Run Flask application
+CMD ["python", "app.py"]
+flask-docker-app/
+│
+├── app.py
+├── requirements.txt
+└── Dockerfile
+
+powershell
+docker build -t flask-docker-app:1.0 .
+docker images
+docker run -d --name flask-container -p 5000:5000 flask-docker-app:1.0
+docker ps
+http://localhost:5000
+docker logs flask-container
+
+
+for java : 
+docker stop flask-container
+cd ..
+mkdir java-docker-app
+cd java-docker-app
+pwd
+notepad HelloWorld.java
+paste : 
+public class HelloWorld {
+
+    public static void main(String[] args) {
+
+        System.out.println("Hello World!");
+
+        System.out.println("Welcome to Docker");
+
+        System.out.println("Java Application is Running Successfully!");
+
+    }
+}
+notepad Dockerfile
+# Use official Java image
+FROM eclipse-temurin:21-jdk
+
+# Set working directory
+WORKDIR /app
+
+# Copy Java file
+COPY HelloWorld.java .
+
+# Compile Java program
+RUN javac HelloWorld.java
+
+# Run Java program
+CMD ["java", "HelloWorld"]
+
+dir
+docker build -t java-docker-app:1.0 .
+
+docker images
+docker run --name java-container java-docker-app:1.0
+docker ps -a
+docker logs java-container
+
+EXP 8 : perform exp 6 as it is 
+
+
+
+
+EXP 9 : Maven Build Lifecycle for Java Applications
+Part 1: Download and install Java JDK
+Step 1. Download Java
+1.	Open Chrome.
+2.	Visit Oracle Java Downloads.
+3.	Select a JDK version (JDK 17 or later).
+4.	Find the Windows x64 Installer (.exe).
+5.	Download it.
+Step 2. Install Java
+1.	Open the downloaded .exe file.
+2.	Click Next.
+3.	Keep the default installation location.
+4.	Click Install.
+5.	Wait for installation to finish.
+6.	Click Close.
+Step 3. Configure Java environment variables
+1.	Press the Windows key.
+2.	Search Environment Variables.
+3.	Open Edit the system environment variables.
+4.	Click Environment Variables.
+5.	Under System variables, click New.
+Enter:
+Field	Value
+Variable name	JAVA_HOME
+Variable value	Your JDK installation folder
+Example:
+C:\Program Files\Java\jdk-24
+Use the actual folder name on your computer.
+6.	Click OK.
+7.	Under System variables, select Path.
+8.	Click Edit → New.
+9.	Add:
+%JAVA_HOME%\bin
+10. Click OK on all windows.
+Step 4. Verify Java
+Open a NEW Command Prompt and execute:
+java -version
+javac -version
+
+
+Part 2: Download and install Maven
+Step 5. Download Apache Maven
+1.	Open Apache Maven official website.
+2.	Find the Files section.
+3.	Download the Binary zip archive (not the source archive).
+Step 6. Extract Maven
+1.	Open Downloads.
+2.	Right-click the Maven ZIP file.
+3.	Select Extract All.
+4.	Extract the folder to:
+C:\Program Files\
+Step 7. Configure Maven environment variables
+1.	Search Windows for Environment Variables.
+2.	Open Edit the system environment variables.
+3.	Click Environment Variables.
+4.	Under System variables, click New.
+Enter:
+Field	Value
+Variable name	MAVEN_HOME
+Variable value	C:\Program Files\apache-maven-3.9.x
+Use your actual extracted folder.
+5.	Click OK.
+6.	Select Path under System variables.
+7.	Click Edit → New.
+8.	Add:
+%MAVEN_HOME%\bin
+9. Click OK on all windows.
+mvn -version
+Part 3: Download and install Visual Studio Code
+Step 9. Download VS Code
+1.	Open Visual Studio Code official website.
+2.	Click Download for Windows.
+3.	Open the downloaded setup file.
+Step 10. Install VS Code
+1.	Accept the agreement.
+2.	Click Next.
+3.	Keep the default installation location.
+4.	Select these options if available:
+o	Add to PATH
+o	Add Open with Code action
+o	Create a desktop icon
+5.	Click Install.
+6.	Click Finish.
+Part 4: Install VS Code extensions
+Step 11. Install the required extensions
+1.	Open VS Code.
+2.	Click the Extensions icon on the left.
+3.	Search for and install these extensions:
+Extension Pack for Java
+Maven for Java
+Test Runner for Java
+Wait until all three show Installed.
+
+Part 5: Verify all installations
+Step 12. Check Java and Maven in VS Code
+1.	Open VS Code.
+2.	Click Terminal → New Terminal.
+3.	Execute these commands one by one:
+java -version
+javac -version
+mvn -version’
+
+
+Part 6: Create the Maven project
+Step 13. Create a project
+1.	In VS Code, press Ctrl + Shift + P.
+2.	Search:
+Maven: Create Maven Project
+3.	Select the command.
+4.	Select:
+maven-archetype-quickstart
+5.	Select the latest available version.
+6.	Enter Group Id:
+com.example
+7. Enter Artifact Id:
+demo
+8.	Select Desktop as the project location.
+9.	Wait for Maven to generate the project.
+10.	Click Open if VS Code asks to open it.
+
+Projewt structure:
+demo
+│
+├── pom.xml
+│
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── example
+    │               └── App.java
+    │
+    └── test
+        └── java
+            └── com
+                └── example
+                    └── AppTest.java
+
+Part 7: Write Java source code
+Step 15. Edit App.java
+1.	Open src.
+2.	Open main → java → com → example.
+3.	Click App.java.
+4.	Delete the existing code.
+5.	Paste:
+package com.example;
+
+public class App {
+
+    public static void main(String[] args) {
+
+        System.out.println("Hello from Maven Project!");
+
+    }
+}
+6. Press Ctrl + S to save.
+Part 8: Write the test case
+Step 16. Edit AppTest.java
+1.	Open src → test → java → com → example.
+2.	Click AppTest.java.
+3.	Delete the existing code.
+4.	Paste:
+package com.example;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AppTest {
+
+    @Test
+    public void testApp() {
+
+        assertTrue(true);
+
+    }
+}
+Part 9: Configure pom.xml
+Step 17. Edit pom.xml
+1.	Open pom.xml from the main demo folder.
+2.	Delete the existing content.
+3.	Paste this complete code:
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+4. Press Ctrl + S.
+Part 10: Execute Maven build lifecycle commands
+Step 18. Open the correct terminal
+In VS Code:
+1.	Click Terminal → New Terminal.
+2.	Make sure the terminal is inside the demo folder.
+3.	Check by running:
+Dir
+mvn clean
+mvn validate
+mvn compile
+mvn test
+mvn package
+mvn install
+Run the packaged Java application
+Step 25. Execute the JAR file
+In the same VS Code terminal, execute:
+
+java -jar target/demo-1.0-SNAPSHOT.jar
+Hello from Maven Project!
+
